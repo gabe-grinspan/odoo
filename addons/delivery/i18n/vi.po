@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -396,20 +396,6 @@ msgid "Estimated cost"
 msgstr "Phí ước tính"
 
 #. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/stock_picking.py:0
-#, python-format
-msgid "Exception occurred with respect to carrier on the transfer"
-msgstr "Ngoại lệ xảy ra đối với đơn vị vận chuyển khi chuyển hàng"
-
-#. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/stock_picking.py:0
-#, python-format
-msgid "Exception:"
-msgstr "Ngoại lệ:"
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
@@ -545,13 +531,6 @@ msgstr "Ghi nhận yêu cầu để dễ dàng tìm kiếm"
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
 msgstr "Quản lý tiền tố zip giao hàng"
-
-#. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/stock_picking.py:0
-#, python-format
-msgid "Manual actions might be needed."
-msgstr "Có thể cần thao tác thủ công."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -808,7 +787,7 @@ msgid ""
 msgstr ""
 "Các phương thức này cho phép tự động tính toán phí giao hàng\n"
 "                dựa theo cài đặt của bạn; cho đơn bán hàng (dựa theo\n"
-"                báo giá) hoặc hóa đơn (dựa theo phiếu xuất kho)."
+"                báo giá) hoặc hóa đơn (dựa theo lệnh giao hàng)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin

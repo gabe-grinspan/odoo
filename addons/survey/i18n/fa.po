@@ -18,14 +18,15 @@
 # Hanna Kheradroosta, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
+# Tiffany Chang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
+"Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,6 +92,13 @@ msgstr "%(participant)s به تازگی در \"%(survey_title)s\" شرکت کر�
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (کپی)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -440,6 +448,11 @@ msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>پاسخ"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
@@ -726,15 +739,6 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr "<span>این گواهینامه ارائه می‌شود به</span> <br/>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid ""
-"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Edit Survey"
-msgstr ""
-"<span>این یک ورودی نظرسنجی آزمایشی است. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>ویرایش نظرسنجی"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -2167,6 +2171,11 @@ msgstr "نمودار"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
 msgstr "گروه‌بندی برمبنای"
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسیریابی HTTP"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
@@ -4875,6 +4884,11 @@ msgid ""
 msgstr ""
 "این کد توسط شرکت کنندگان شما برای رسیدن به جلسه شما استفاده می شود. با خیال "
 "راحت آن را هر طور که دوست دارید سفارشی کنید!"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey Entry."
+msgstr ""
 
 #. module: survey
 #. odoo-javascript

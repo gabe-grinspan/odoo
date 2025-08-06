@@ -5,7 +5,7 @@
 # Translators:
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Martin Trigaux, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # Will Sensors, 2025
 # 
 msgid ""
@@ -25,12 +25,12 @@ msgstr ""
 #. module: website_sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.configure_optional_products
 msgid "<span class=\"label\">Price</span>"
-msgstr ""
+msgstr "<span class=\"label\">Cena</span>"
 
 #. module: website_sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.configure_optional_products
 msgid "<span class=\"label\">Product</span>"
-msgstr ""
+msgstr "<span class=\"label\">Produkts</span>"
 
 #. module: website_sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.configure_optional_products
@@ -57,14 +57,14 @@ msgstr "Pievienot grozam"
 #. module: website_sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Pieejamās opcijas"
 
 #. module: website_sale_product_configurator
 #. odoo-javascript
 #: code:addons/website_sale_product_configurator/static/src/js/website_sale_options.js:0
 #, python-format
 msgid "Continue Shopping"
-msgstr ""
+msgstr "Turpināt iepirkšanos"
 
 #. module: website_sale_product_configurator
 #: model:ir.model.fields.selection,name:website_sale_product_configurator.selection__website__add_to_cart_action__force_dialog
@@ -75,14 +75,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Nav pieejams"
 
 #. module: website_sale_product_configurator
 #. odoo-javascript
 #: code:addons/website_sale_product_configurator/static/src/js/website_sale_options.js:0
 #, python-format
 msgid "Proceed to Checkout"
-msgstr ""
+msgstr "Veikt apmaksu"
 
 #. module: website_sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:website_sale_product_configurator.configure_optional_products

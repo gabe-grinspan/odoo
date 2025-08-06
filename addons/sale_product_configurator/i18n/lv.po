@@ -6,8 +6,8 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # Will Sensors, 2025
 # 
 msgid ""
@@ -43,7 +43,7 @@ msgstr "Pievienot vienu"
 #: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
 #, python-format
 msgid "Add optional products"
-msgstr ""
+msgstr "Pievienot papildu produktus"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
@@ -67,7 +67,7 @@ msgstr "Krēslu grīdas aizsardzība"
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 #, python-format
 msgid "Configure your product"
-msgstr ""
+msgstr "Konfigurēt Jūsu preci"
 
 #. module: sale_product_configurator
 #. odoo-javascript

@@ -4662,7 +4662,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 resize[0].forEach((val, key) => {
                     if (self.$target.hasClass(val)) {
                         current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
+                    } else if (parseInt(resize[1][key]) === cssPropertyValue) {
                         current = key;
                     }
                 });
@@ -6009,6 +6009,13 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     async replaceMedia() {
+        const sel = this.ownerDocument.getSelection();
+        // Ensure the element is selected before opening the media dialog.
+        if (!sel.rangeCount) {
+            const range = this.ownerDocument.createRange();
+            range.selectNodeContents(this.$target[0]);
+            sel.addRange(range);
+        }
         // open mediaDialog and replace the media.
         await this.options.wysiwyg.openMediaDialog({ node:this.$target[0] });
     },
@@ -7716,6 +7723,9 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('snippet_edition_request', {exec: async () => {
             await this._autoOptimizeImage();
             this.trigger_up('cover_update');
+            if (ev._complete) {
+                ev._complete();
+            }
         }});
     },
     /**
@@ -8101,12 +8111,13 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         const parts = backgroundImageCssToParts(this.$target.css('background-image'));
         if (backgroundURL) {
             parts.url = `url('${backgroundURL}')`;
-            this.$target.addClass('oe_img_bg o_bg_img_center');
+            this.$target.addClass('oe_img_bg o_bg_img_center o_bg_img_origin_border_box');
         } else {
             delete parts.url;
             this.$target[0].classList.remove(
                 "oe_img_bg",
                 "o_bg_img_center",
+                "o_bg_img_origin_border_box",
                 "o_modified_image_to_save",
             );
         }
@@ -9229,6 +9240,17 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 : _t("Custom Button");
                             const targetCopyEl = this.$target[0].cloneNode(true);
                             targetCopyEl.classList.add('s_custom_snippet');
+                            // when cloning the snippets which has o_snippet_invisible, o_snippet_mobile_invisible or
+                            // o_snippet_desktop_invisible class will be hidden because of d-none class added on it,
+                            // so we needs to remove `d-none` explicity in such case from the target.
+                            const isTargetHidden = [
+                                "o_snippet_invisible",
+                                "o_snippet_mobile_invisible",
+                                "o_snippet_desktop_invisible"
+                            ].some(className => this.$target[0].classList.contains(className));
+                            if (isTargetHidden) {
+                                targetCopyEl.classList.remove("d-none");
+                            }
                             delete targetCopyEl.dataset.name;
                             if (isButton) {
                                 targetCopyEl.classList.remove("mb-2");

@@ -5878,6 +5878,112 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
     });
 
+    QUnit.test("Save record, no changes but dirty (add and remove tag)", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            resId: 1,
+            mockRPC(_route, args) {
+                if (args.method === "web_save") {
+                    assert.step("ERROR: web_save should not be called");
+                } else if (args.method === "web_read") {
+                    assert.step("web_read");
+                }
+            },
+        });
+
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+        // add a tag
+        await selectDropdownItem(target, "timmy", "gold");
+        assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=timmy] input").value,
+            "",
+            "many2many_tags should be empty"
+        );
+
+        // remove tag
+        await click(target.querySelector(".o_field_widget[name=timmy] .o_tag .o_delete"));
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+        assert.verifySteps(["web_read", "web_read"]);
+
+        // click on save
+        await clickSave(target);
+        await nextTick();
+        // The `web_save` RPC should not be called as there are no changes.
+        // The record must be marked as not dirty.
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+        assert.verifySteps([]); // avoid doint an extra web_read
+    });
+
+    QUnit.test(
+        "switching to another record from a dirty record but wo changes (add and remove tag)",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+                resIds: [1, 2],
+                resId: 1,
+                mockRPC(_route, args) {
+                    if (args.method === "web_save") {
+                        assert.step("ERROR: web_save should not be called");
+                    } else if (args.method === "web_read") {
+                        assert.step("web_read");
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_pager_value").textContent,
+                "1",
+                "pager value should be 1"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_pager_limit").textContent,
+                "2",
+                "pager limit should be 2"
+            );
+
+            assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+            // add a tag
+            await selectDropdownItem(target, "timmy", "gold");
+            assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=timmy] input").value,
+                "",
+                "many2many_tags should be empty"
+            );
+
+            // remove tag
+            await click(target.querySelector(".o_field_widget[name=timmy] .o_tag .o_delete"));
+            assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+            assert.verifySteps(["web_read", "web_read"]);
+
+            // click on the pager to switch to the next record
+            // The `web_save` RPC should not be called as there are no changes.
+            // The next record should be load correctly.
+            await click(target.querySelector(".o_pager_next"));
+            assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
+            assert.strictEqual(
+                target.querySelector(".o_pager_value").textContent,
+                "2",
+                "pager value should be 2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_last_breadcrumb_item").innerText,
+                "second record"
+            );
+
+            assert.verifySteps(["web_read"]);
+        }
+    );
+
     QUnit.test("do not reload after save when using pager", async function (assert) {
         await makeView({
             type: "form",
@@ -9308,10 +9414,14 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
         assert.deepEqual(getFooValues(), ["zop", "yop", "xop", "My little Foo Value"]);
 
-        // client-side sort on edit
+        // no client-side sort after edit
         await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
         await editInput(target, ".modal .o_field_widget[name=foo] input", "zzz");
         await click(target.querySelector(".modal-footer .o_form_button_save"));
+        assert.deepEqual(getFooValues(), ["zop", "zzz", "xop", "My little Foo Value"]);
+
+        // server-side sort post save
+        await clickSave(target);
         assert.deepEqual(getFooValues(), ["zzz", "zop", "xop", "My little Foo Value"]);
     });
 
@@ -12423,7 +12533,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: error on save when breadcrumb clicked", async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         registry.category("services").add("error", errorService);
 
@@ -12469,7 +12579,86 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_save"]);
         await nextTick();
         assert.containsOnce(target, ".o_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog .btn-primary");
+        assert.containsOnce(target, ".o_error_dialog .btn-secondary");
     });
+
+    QUnit.test(
+        "Auto save: redirect warning on save when breadcrumb clicked",
+        async function (assert) {
+            assert.expect(7);
+
+            registry.category("services").add("error", errorService);
+
+            serverData.actions[1] = {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            };
+
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="name"/>
+                    </tree>`,
+                "partner,false,form": `
+                    <form>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </form>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        throw makeServerError({
+                            type: `RedirectWarning`,
+                            args: [
+                                "The message",
+                                {
+                                    name: "Sub view",
+                                    res_model: "partner",
+                                    type: "ir.actions.act_window",
+                                    domain: [],
+                                    target: "new",
+                                    views: [[false, "list"]],
+                                    context: { redirected: true },
+                                },
+                                "Button Label",
+                                {},
+                            ],
+                            description: "Beep boop server stuff and technical string",
+                        });
+                    }
+                    if (method === "web_search_read" && kwargs.context.redirected) {
+                        assert.step("redirect_action");
+                    }
+                },
+            });
+            await doAction(webClient, 1);
+            await click(target.querySelector(".o_data_row td.o_data_cell"));
+
+            await editInput(target, ".o_field_widget[name='name'] input", "aaa");
+            await click(target.querySelector(".breadcrumb-item.o_back_button"));
+            assert.verifySteps(["web_save"]);
+            await nextTick();
+            assert.containsOnce(target, ".o_error_dialog");
+            assert.containsOnce(target, ".o_error_dialog .btn-primary");
+            assert.containsN(target, ".o_error_dialog .btn-secondary", 2);
+            await click(target.querySelector(".o_error_dialog .btn-secondary"));
+            await nextTick();
+            assert.verifySteps(["redirect_action"]);
+        }
+    );
 
     QUnit.test("Auto save: save when action changed", async function (assert) {
         assert.expect(6);
@@ -15277,6 +15466,74 @@ QUnit.module("Views", (hooks) => {
 
             // everything should have gone smoothly, nothing should have happened as the view is destroyed
             assert.verifySteps(["get_views", "get_views"]);
+        }
+    );
+    QUnit.test(
+        "executing new action, closes dialog, and avoid reload previous view",
+        async function (assert) {
+            const mockRPC = async function (route, args) {
+                assert.step(args.method || route);
+                if (route === "/web/action/load" && args.action_id === "someaction") {
+                    return Promise.resolve({
+                        res_id: 1,
+                        type: "ir.actions.act_window",
+                        target: "new",
+                        res_model: "partner",
+                        view_mode: "form",
+                        views: [[false, "form"]],
+                    });
+                }
+            };
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <sheet>
+                            <div name="button_box" class="oe_button_box test">
+                                <button class="oe_stat_button" type="action" name="someaction">
+                                    Test
+                                </button>
+                            </div>
+                        </sheet>
+                    </form>`,
+                "partner,false,kanban": `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo" />
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, {
+                res_id: 1,
+                type: "ir.actions.act_window",
+                target: "current",
+                res_model: "partner",
+                view_mode: "form",
+                views: [[false, "form"]],
+            });
+            assert.containsOnce(target, ".o_form_view");
+            assert.verifySteps(["/web/webclient/load_menus", "get_views", "web_read"]);
+
+            await click(target.querySelector(".oe_stat_button"));
+            await nextTick();
+            assert.containsOnce(target, ".o_dialog .o_form_view");
+
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
+            assert.verifySteps([
+                "/web/action/load",
+                "get_views",
+                "/web/action/load",
+                //"web_read", We shouldn't be doing a web_read for the view that we are leaving.
+                "get_views",
+                "web_search_read",
+            ]);
         }
     );
 });

@@ -365,7 +365,7 @@ export class Product extends PosModel {
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
         const priceAfterFp = this.pos.computePriceAfterFp(price, currentTaxes);
-        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
+        const allPrices = this.pos.compute_all(taxes, priceAfterFp, quantity, this.pos.currency.rounding);
         if (iface_tax_included === "total") {
             return allPrices.total_included;
         } else {
@@ -498,7 +498,7 @@ export class Orderline extends PosModel {
                 pricelist: this.order.pricelist,
                 quantity: this.get_quantity(),
                 price: unitPriceDiscount,
-            }) * this.get_quantity();
+            });
         return displayPrice !== productDisplayedPrice ? "manual" : "original";
     }
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
@@ -1463,7 +1463,7 @@ export class Order extends PosModel {
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
-        this.trackingNumber = (
+        this.trackingNumber = this.trackingNumber || (
             (this.pos_session_id % 10) * 100 +
             (this.sequence_number % 100)
         ).toString();
@@ -1585,6 +1585,7 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+        this.trackingNumber = json.tracking_number;
     }
     updateSequenceNumber(json) {
         this.pos.pos_session.sequence_number = Math.max(
@@ -1807,6 +1808,7 @@ export class Order extends PosModel {
                         attribute_value_ids: orderline.attribute_value_ids,
                         quantity: quantityDiff,
                         note: note,
+                        isPartOfCombo: orderline.comboParent !== undefined,
                     };
                     changesCount += quantityDiff;
                     changeAbsCount += Math.abs(quantityDiff);
@@ -2268,6 +2270,7 @@ export class Order extends PosModel {
                     comboParent,
                     comboLine: line.comboLine,
                     attribute_value_ids: line.attribute_value_ids,
+                    attribute_custom_values: line.comboLine?.configuration?.attribute_custom_values,
                     extras: {price_type: "manual"},
                 }
             );

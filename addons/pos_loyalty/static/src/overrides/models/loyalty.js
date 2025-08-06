@@ -164,9 +164,10 @@ patch(Order.prototype, {
                     continue;
                 }
                 const newId = nextId--;
-                delete this.oldCouponMapping[pe.coupon_id];
+                this.oldCouponMapping[pe.coupon_id] = newId;
                 pe.coupon_id = newId;
                 this.couponPointChanges[newId] = pe;
+                delete this.couponPointChanges[key];
             }
         }
         super.init_from_JSON(...arguments);
@@ -362,7 +363,6 @@ patch(Order.prototype, {
             return this._updateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
                 const claimableRewards = this.getClaimableRewards(false, false, true);
-                let changed = false;
                 for (const { coupon_id, reward } of claimableRewards) {
                     if (
                         reward.program_id.rewards.length === 1 &&
@@ -371,14 +371,10 @@ patch(Order.prototype, {
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
                         this._applyReward(reward, coupon_id);
-                        changed = true;
                     }
                 }
-                // Rewards may impact the number of points gained
-                if (changed) {
-                    await this._updateLoyaltyPrograms();
-                }
                 this._updateRewardLines();
+                await this._updateLoyaltyPrograms();
             });
         });
     },
@@ -490,6 +486,11 @@ patch(Order.prototype, {
             ) {
                 continue;
             }
+
+            //If there is only one possible reward we try to claim the most possible out of it
+            if (claimedReward.reward.reward_product_ids?.length === 1) {
+                delete claimedReward.args["quantity"];
+            }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     },
@@ -532,7 +533,7 @@ patch(Order.prototype, {
             for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
-            if (pointsAdded.length < oldChanges.length) {
+            if (pointsAdded.length < oldChanges.length || !this._programIsApplicable(program)) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
                 this.couponPointChanges = Object.fromEntries(
                     Object.entries(this.couponPointChanges).filter(([k, pe]) => {
@@ -744,6 +745,10 @@ patch(Order.prototype, {
         }
         return true;
     },
+    isLineValidForLoyaltyPoints(line) {
+        // This method should be overriden in other modules
+        return true;
+    },
     /**
      * Computes how much points each program gives.
      *
@@ -752,7 +757,7 @@ patch(Order.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id);
+        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id && !line.comboParent);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id ? this.pos.reward_by_id[line.reward_id] : undefined;
@@ -760,6 +765,9 @@ patch(Order.prototype, {
             const rewardProgram = reward && reward.program_id;
             // Skip lines for automatic discounts.
             if (isDiscount && rewardProgram.trigger === "auto") {
+                continue;
+            }
+            if (!this.isLineValidForLoyaltyPoints(line)) {
                 continue;
             }
             for (const program of programs) {
@@ -791,11 +799,11 @@ patch(Order.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPriceWithoutTax() : line.get_price_without_tax()),
                     0
                 );
                 const amountCheck =
@@ -834,7 +842,7 @@ patch(Order.prototype, {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        orderedProductPaid += line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -1010,6 +1018,10 @@ patch(Order.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if ((reward.program_id.program_type === 'coupons' && this.orderlines.find(((rewardline) => rewardline.reward_id === reward.id)))) {
+                    continue;
+                }
                 if (auto && this.disabledRewards.has(reward.id)) {
                     continue;
                 }
@@ -1116,7 +1128,9 @@ patch(Order.prototype, {
             if (!line.get_quantity()) {
                 continue;
             }
-            const taxKey = line.get_taxes().map((t) => t.id);
+            const taxKey = ['ewallet', 'gift_card'].includes(reward.program_id.program_type)
+                ? line.get_taxes().map((t) => t.id)
+                : line.get_taxes().filter((t) => t.amount_type !== 'fixed').map((t) => t.id);
             discountable += line.get_price_with_tax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;

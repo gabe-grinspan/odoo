@@ -8,14 +8,14 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2024
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2024
 # Damian Ratus, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-06-13 00:52+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -153,7 +153,7 @@ msgstr "%s (kopiuj)"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr ""
+msgstr "%s --> JM produktu to %s (%s) - JM ruchu to %s (%s)"
 
 #. module: stock
 #. odoo-python
@@ -390,11 +390,6 @@ msgstr "4 x 7 z ceną"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1830,6 +1825,13 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Oblicz koszty wysyłki i prześlij kurierem Easypost"
 
@@ -1837,6 +1839,13 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Oblicz koszty wysyłki i prześlij kurierem FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1855,8 +1864,22 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Oblicz koszty wysyłki i prześlij kurierem USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2343,6 +2366,11 @@ msgstr "DEMO_SOURCE_DISPLAY_NAME"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -3030,6 +3058,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Czy potwierdzasz, że chcesz scrapować?"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Dokumentacja"
@@ -3263,6 +3292,7 @@ msgstr "Luty"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Łącznik FedEx"
 
@@ -4042,13 +4072,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "Natychmiastowe pobranie"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "Importuj"
 
 #. module: stock
 #. odoo-javascript
@@ -5570,6 +5593,8 @@ msgid ""
 "No rule has been found to replenish %r in %r.\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Nie znaleziono reguły uzupełniającej \"%r\" w \"%r\".\n"
+"Sprawdź konfigurację tras w produkcie."
 
 #. module: stock
 #. odoo-python
@@ -6457,11 +6482,11 @@ msgstr "Obecność zależy od typu operacji."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Naciśnij przycisk UTWÓRZ, aby zdefiniować ilości dla każdego produktu w "
-"magazynie lub zaimportuj ilość z arkusza kalkulacyjnego przez Ulubione "
+"Kliknij przycisk \"Nowy\", aby zdefiniować ilość produktu w Twoim magazynie "
+"lub zaimportuj ilości z arkusza kalkulacyjnego przez menu Akcji."
 
 #. module: stock
 #. odoo-javascript
@@ -6510,7 +6535,7 @@ msgstr "Wydrukuj etykietę jako:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr ""
+msgstr "Wydrukuj na \"Umieść w paczce\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7821,7 +7846,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Regułą %s przynależy do %s podczas gdy trasa przynależy do %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8915,6 +8940,15 @@ msgstr "Numer partii/serii (%s) jest powiązany z innym produktem."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -9092,6 +9126,8 @@ msgid ""
 "The quantities selected do not all belong to the same location.\n"
 "                    You may not assign them a package without moving them to a common location."
 msgstr ""
+"Wybrane ilości nie należą do tej samej lokalizacji.\n"
+"                    Nie możesz przypisać im opakowania bez przemieszczania ich do wspólnej lokalizacji."
 
 #. module: stock
 #. odoo-python
@@ -9207,6 +9243,8 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
+"Nie ma nic kwalifikującego się do umieszczenia w paczce. Albo nie ma ilości "
+"do umieszczenia w paczce, albo wszystkie produkty są już w paczce."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -9248,6 +9286,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"To pole wyboru ma charakter wyłącznie orientacyjny, nie zatwierdza ani nie "
+"generuje żadnych ruchów produktowych."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9301,6 +9341,10 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Jest to ilość produktu, która jest planowana do przemieszczenia. Obniżenie "
+"tej ilości nie generuje oczekującego zamówienia. Zmiana tej ilości w "
+"przypisanych ruchach wpływa na rezerwację produktu i powinna być wykonana "
+"ostrożnie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9459,6 +9503,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Ten prefiks sekwencji jest już używany przez inny typ operacji. Zaleca się "
+"wybranie unikalnego prefiksu, aby uniknąć problemów i/lub powtórzonych "
+"wartości referencyjnych, lub przypisanie istniejącej sekwencji referencyjnej"
+" do tego typu operacji."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9579,7 +9627,7 @@ msgstr "Do ponownego zamówienia"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Today"
-msgstr "Na dzisiaj"
+msgstr "Dzisiaj"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -9835,11 +9883,13 @@ msgstr "Typ wyjątku działania na rekordzie."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Łącznik UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Łącznik USPS"
 
@@ -10552,6 +10602,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Zamierzasz przenieść ilości w pakiecie bez przenoszenia całego pakietu.\n"
+"                    Te ilości mogą zostać usunięte z następujących pakietów:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -11003,6 +11055,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Masz produkty w magazynie, które mają włączone śledzenie numeru partii/serii.\n"
+"Wyłącz śledzenie we wszystkich produktach przed wyłączeniem tego ustawienia."
 
 #. module: stock
 #. odoo-python

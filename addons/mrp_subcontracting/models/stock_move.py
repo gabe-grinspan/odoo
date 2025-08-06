@@ -141,7 +141,7 @@ class StockMove(models.Model):
             for move in self:
                 if move.state in ('done', 'cancel') or not move.is_subcontract:
                     continue
-                move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel')).write({
+                move.move_orig_ids.production_id.with_context(from_subcontract=True).filtered(lambda p: p.state not in ('done', 'cancel')).write({
                     'date_start': move.date,
                     'date_finished': move.date,
                 })
@@ -319,7 +319,7 @@ class StockMove(models.Model):
 
         # Cancel productions until reach new_quantity
         for production in (productions - wip_production):
-            if quantity_to_remove >= production.product_qty:
+            if float_compare(quantity_to_remove, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:

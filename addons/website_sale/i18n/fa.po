@@ -19,19 +19,21 @@
 # Martin Trigaux, 2023
 # Zahed Alfak <tamass4116@gmail.com>, 2024
 # Abbas Ebadian, 2024
-# Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Hanna Kheradroosta, 2024
 # fardin mardani <fmardani0@gmail.com>, 2024
 # Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
+# Hamed Mohammadi <hamed@dehongi.com>, 2025
+# Naser mars, 2025
+# Tiffany Chang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-06-13 00:52+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
+"Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +69,11 @@ msgstr "بررسی‌ها %s"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "&amp; Shipping"
 msgstr "و ارسال"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1265,23 +1272,31 @@ msgstr "محاسبه هزینه حمل و نقل و ارسال با Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1507,13 +1522,8 @@ msgstr "سفارشی‌سازی قالب‌های ایمیل"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "کانکتور DHL Express"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "روش های حمل و نقل DHL"
+msgid "DHL"
+msgstr "دی اچ ال"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1705,6 +1715,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "آیا می‌خواهید سبد خرید خود را قبل از افزودن محصولات به آن پاک کنید؟"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "مستندات"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
 msgstr "اسناد"
@@ -1890,11 +1905,6 @@ msgstr "منتخب"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "فدکس"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "روش های حمل و نقل FedEx"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2834,6 +2844,13 @@ msgstr "توکن های پرداخت"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "تراکنش های پرداخت"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr "پرداخت در حال پردازش است."
 
 #. module: website_sale
 #. odoo-python
@@ -3949,6 +3966,13 @@ msgstr "مبلغ در صفحه محصول eCommerce به صورت خط‌خور�
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr "سبد خرید قبلا پرداخت شده است. لطفا صفحه را رفرش کنید"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "The cart has been updated. Please refresh the page."
 msgstr "سبد خرید به‌روز شد. لطفاً صفحه را تازه‌سازی کنید."
 
@@ -4181,11 +4205,6 @@ msgstr "آدرس اینترنتی یک ویدیو برای نمایش محصول
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
 msgstr "اداره پست ایالات متحده آمریکا"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "روش های حمل و نقل USPS"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_base_unit
@@ -4580,17 +4599,6 @@ msgstr "ایمیل شما"
 #, python-format
 msgid "Your Name"
 msgstr "نام"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#, python-format
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
-msgstr ""
-"حساب شما اجازه پرداخت به نام شرکت را ندارد. %sلطفاً از حساب خود خارج شوید و "
-"یک حساب جدید برای این وب‌سایت ایجاد کنید، یا با مدیر وب‌سایت تماس بگیرید."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

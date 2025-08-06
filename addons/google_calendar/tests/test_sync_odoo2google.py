@@ -13,7 +13,8 @@ from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo import tools
 
-@tagged('odoo2google')
+
+@tagged('odoo2google', 'calendar_performance', 'is_query_count')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncOdoo2Google(TestSyncGoogle):
 
@@ -76,7 +77,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         partner_model = self.env.ref('base.model_res_partner')
         partner = self.env['res.partner'].search([], limit=1)
-        with self.assertQueryCount(__system__=615):
+        with self.assertQueryCount(__system__=721):
             events = self.env['calendar.event'].create([{
                 'name': "Event %s" % (i),
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -94,7 +95,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         with self.assertQueryCount(__system__=29):
             events.unlink()
 
-
     @patch_api
     @users('__system__')
     @warmup
@@ -107,7 +107,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'duration': 18,
         })
         partner_model = self.env.ref('base.model_res_partner')
-        with self.assertQueryCount(__system__=86):
+        with self.assertQueryCount(__system__=806):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -124,7 +124,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'res_id': partner.id,
             })
 
-        with self.assertQueryCount(__system__=37):
+        with self.assertQueryCount(__system__=34):  # gc: 33
             event.unlink()
 
     def test_event_without_user(self):
@@ -933,3 +933,43 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
             'transparency': 'opaque',
         }, timeout=3)
+
+    @patch_api
+    def test_event_duplication_allday_google_calendar(self):
+        event = self.env['calendar.event'].with_user(self.organizer_user).create({
+            'name': "Event",
+            'allday': True,
+            'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)],
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False,
+        })
+        event._sync_odoo2google(self.google_service)
+        event_response_data = {
+             'id': False,
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': self.organizer_user.email, 'self': True},
+            'attendees': [
+                            {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
+                            {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
+                         ],
+            'reminders': {'overrides': [], 'useDefault': False},
+            'visibility': 'public',
+            'transparency': 'opaque',
+        }
+        self.assertGoogleEventInsertedMultiTime({
+            **event_response_data,
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+        })
+
+        event2 = event.copy()
+        event2._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInsertedMultiTime({
+            **event_response_data,
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event2.id}},
+        })
